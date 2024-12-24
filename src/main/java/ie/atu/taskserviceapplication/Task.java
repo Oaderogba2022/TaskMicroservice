@@ -13,7 +13,6 @@ public class Task {
     private String description;
     private String status;
 
-    // Default constructor
     public Task() {}
 
     public Task(String id,String title, String description, String status) {
