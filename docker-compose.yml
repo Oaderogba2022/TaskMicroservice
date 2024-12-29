@@ -1,0 +1,31 @@
+version: '3.9'
+services:
+  task-service:
+    image: taskserviceapplication
+    build:
+      context: ./TaskServiceApplication
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+    container_name: task-service-container
+    restart: unless-stopped
+
+  project-service:
+    image: projectserviceapplication
+    build:
+      context: ./ProjectServiceApplication
+      dockerfile: Dockerfile
+    ports:
+      - "8081:8080"
+    container_name: project-service-container
+    restart: unless-stopped
+
+  notification-service:
+    image: notificationserviceapplication
+    build:
+      context: ./NotificationServiceApplication
+      dockerfile: Dockerfile
+    ports:
+      - "8082:8080"
+    container_name: notification-service-container
+    restart: unless-stopped
