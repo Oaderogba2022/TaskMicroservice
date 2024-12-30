@@ -22,6 +22,9 @@ jobs:
           java-version: '23'
           distribution: 'temurin'
 
+      - name: Run Unit Tests
+        run: mvn test
+
       - name: Package with Maven
         run: mvn clean package
 
