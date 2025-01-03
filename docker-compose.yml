@@ -16,7 +16,7 @@ services:
       context: ./ProjectServiceApplication
       dockerfile: Dockerfile
     ports:
-      - "8081:8080"
+      - "8081:8081"
     container_name: project-service-container
     restart: unless-stopped
 
@@ -26,6 +26,6 @@ services:
       context: ./NotificationServiceApplication
       dockerfile: Dockerfile
     ports:
-      - "8082:8080"
+      - "8082:8082"
     container_name: notification-service-container
     restart: unless-stopped

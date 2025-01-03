@@ -1,5 +1,6 @@
 package ie.atu.taskserviceapplication;
 
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -10,14 +11,18 @@ import java.util.Optional;
 public class TaskService {
 
     private final TaskRepository taskRepository;
+    private final RabbitTemplate rabbitTemplate;
 
     @Autowired
-    public TaskService(TaskRepository taskRepository) {
+    public TaskService(TaskRepository taskRepository, RabbitTemplate rabbitTemplate) {
         this.taskRepository = taskRepository;
+        this.rabbitTemplate = rabbitTemplate;
     }
 
     public Task createTask(Task task) {
-        return taskRepository.save(task);
+        Task createdTask = taskRepository.save(task);
+        sendTaskNotificationToQueue(createdTask);
+        return createdTask;
     }
 
     public Task getTaskById(String taskId) {
@@ -35,7 +40,9 @@ public class TaskService {
             task.setTitle(taskDetails.getTitle());
             task.setDescription(taskDetails.getDescription());
             task.setStatus(taskDetails.getStatus());
-            return taskRepository.save(task);
+            Task updatedTask = taskRepository.save(task);
+            sendTaskNotificationToQueue(updatedTask);
+            return updatedTask;
         }
         return null;
     }
@@ -47,5 +54,10 @@ public class TaskService {
             return true;
         }
         return false;
+    }
+
+    private void sendTaskNotificationToQueue(Task task) {
+        rabbitTemplate.convertAndSend("taskQueue", task);
+        System.out.println("Sent Task to Queue: " + task);
     }
 }
