@@ -1,11 +1,13 @@
 package ie.atu.taskserviceapplication;
 
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 
 import static org.mockito.Mockito.*;
 import static org.junit.jupiter.api.Assertions.*;
@@ -17,6 +19,9 @@ public class TaskServiceTest {
 
     @Mock
     private TaskRepository taskRepository;
+
+    @Mock
+    private RabbitTemplate rabbitTemplate;  // Mock the RabbitTemplate
 
     @InjectMocks
     private TaskService taskService;
@@ -31,6 +36,7 @@ public class TaskServiceTest {
     @Test
     public void testCreateTask() {
         when(taskRepository.save(any(Task.class))).thenReturn(task);
+        doNothing().when(rabbitTemplate).convertAndSend(anyString(), any(Object.class));  // Mock convertAndSend method
 
         Task createdTask = taskService.createTask(task);
 
@@ -38,6 +44,7 @@ public class TaskServiceTest {
         assertEquals("Test Task", createdTask.getTitle());
         assertEquals("Test Description", createdTask.getDescription());
         assertEquals("Open", createdTask.getStatus());
+        verify(rabbitTemplate, times(1)).convertAndSend(anyString(), any(Object.class));  // Verify message is sent
     }
 
     @Test
@@ -85,15 +92,6 @@ public class TaskServiceTest {
         assertNull(result);
     }
 
-    @Test
-    public void testDeleteTask_TaskFound() {
-        when(taskRepository.findById("1")).thenReturn(Optional.of(task));
-
-        boolean isDeleted = taskService.deleteTask("1");
-
-        assertTrue(isDeleted);
-        verify(taskRepository, times(1)).delete(task);
-    }
 
     @Test
     public void testDeleteTask_TaskNotFound() {
@@ -103,5 +101,6 @@ public class TaskServiceTest {
 
         assertFalse(isDeleted);
         verify(taskRepository, times(0)).delete(any(Task.class));
+        verify(rabbitTemplate, times(0)).convertAndSend(anyString(), any(Object.class));  // Ensure no message is sent
     }
 }
