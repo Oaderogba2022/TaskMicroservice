@@ -5,7 +5,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -19,11 +18,6 @@ public class TaskController {
         this.taskService = taskService;
     }
 
-    /*@PostMapping
-    public ResponseEntity<Task> createTask(@RequestBody Task task) {
-        Task createdTask = taskService.createTask(task);
-        return new ResponseEntity<>(createdTask, HttpStatus.CREATED);
-    }*/
 
     /*@GetMapping("/{taskId}")
     public ResponseEntity<Task> getTask(@PathVariable String taskId) {

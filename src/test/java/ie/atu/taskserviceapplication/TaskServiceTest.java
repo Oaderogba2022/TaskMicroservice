@@ -21,7 +21,7 @@ public class TaskServiceTest {
     private TaskRepository taskRepository;
 
     @Mock
-    private RabbitTemplate rabbitTemplate;  // Mock the RabbitTemplate
+    private RabbitTemplate rabbitTemplate;
 
     @InjectMocks
     private TaskService taskService;
@@ -36,7 +36,7 @@ public class TaskServiceTest {
     @Test
     public void testCreateTask() {
         when(taskRepository.save(any(Task.class))).thenReturn(task);
-        doNothing().when(rabbitTemplate).convertAndSend(anyString(), any(Object.class));  // Mock convertAndSend method
+        doNothing().when(rabbitTemplate).convertAndSend(anyString(), any(Object.class));
 
         Task createdTask = taskService.createTask(task);
 
@@ -44,7 +44,7 @@ public class TaskServiceTest {
         assertEquals("Test Task", createdTask.getTitle());
         assertEquals("Test Description", createdTask.getDescription());
         assertEquals("Open", createdTask.getStatus());
-        verify(rabbitTemplate, times(1)).convertAndSend(anyString(), any(Object.class));  // Verify message is sent
+        verify(rabbitTemplate, times(1)).convertAndSend(anyString(), any(Object.class));
     }
 
     @Test
@@ -101,6 +101,6 @@ public class TaskServiceTest {
 
         assertFalse(isDeleted);
         verify(taskRepository, times(0)).delete(any(Task.class));
-        verify(rabbitTemplate, times(0)).convertAndSend(anyString(), any(Object.class));  // Ensure no message is sent
+        verify(rabbitTemplate, times(0)).convertAndSend(anyString(), any(Object.class));
     }
 }

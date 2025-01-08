@@ -4,7 +4,7 @@ public class TaskMapper {
 
     public static TaskDTO toDTO(Task task) {
         TaskDTO taskDTO = new TaskDTO();
-        taskDTO.setId(task.getId()); // Map the ID
+        taskDTO.setId(task.getId());
         taskDTO.setTitle(task.getTitle());
         taskDTO.setDescription(task.getDescription());
         taskDTO.setStatus(task.getStatus());
