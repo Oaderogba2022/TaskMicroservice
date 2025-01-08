@@ -43,7 +43,6 @@ class TaskControllerIntegrationTest {
 
     @Test
     void getTaskByIdTest() throws Exception {
-        // Mock task response
         Task task = new Task("1", "Test Task", "Description", "Pending");
         when(taskService.getTaskById("1")).thenReturn(task);
 
