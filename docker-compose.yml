@@ -1,31 +1,27 @@
 version: '3.9'
+
 services:
   task-service:
-    image: taskserviceapplication
-    build:
-      context: ./TaskServiceApplication
-      dockerfile: Dockerfile
+    image: taskserviceapplication:latest
     ports:
       - "8080:8080"
-    container_name: task-service-container
-    restart: unless-stopped
+    networks:
+      - my_network
 
   project-service:
-    image: projectserviceapplication
-    build:
-      context: ./ProjectServiceApplication
-      dockerfile: Dockerfile
+    image: projectserviceapplication:latest
     ports:
       - "8081:8081"
-    container_name: project-service-container
-    restart: unless-stopped
-
+    networks:
+      - my_network
   notification-service:
-    image: notificationserviceapplication
-    build:
-      context: ./NotificationServiceApplication
-      dockerfile: Dockerfile
+    image: notificationserviceapplication:latest
     ports:
       - "8082:8082"
-    container_name: notification-service-container
-    restart: unless-stopped
+    networks:
+      - my_network
+
+networks:
+  my_network:
+    driver: bridge
+
